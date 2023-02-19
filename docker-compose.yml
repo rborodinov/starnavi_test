@@ -1,0 +1,42 @@
+version: "3.8"
+
+services: 
+  dev:
+    image: starnavi/starnavi:latest-dev
+    working_dir: /home/starnavi
+    entrypoint: uvicorn starnavi.app:app --reload --host 0.0.0.0
+    build: 
+      target: development
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - 8000:8000
+    volumes:
+      - .:/home/starnavi
+    
+    environment: 
+      - MODE=development
+  
+  prod:
+    image: starnavi/starnavi:latest-prod
+    working_dir: /production/starnavi
+    build: 
+      target: production
+      context: .
+      dockerfile: Dockerfile
+  
+  test:
+    image: starnavi/starnavi:latest-test
+    working_dir: /home/starnavi
+    entrypoint: pytest
+    build: 
+      target: testing
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - 8000:8000
+    volumes:
+      - .:/home/starnavi
+    
+    environment: 
+      - MODE=testing
