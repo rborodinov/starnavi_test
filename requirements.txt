@@ -2,6 +2,8 @@
 fastapi==0.61.1
 uvicorn==0.12.1
 pydantic==1.6.1
+SQLAlchemy==2.0.4
+SQLAlchemy-Utils==0.40.0
 
 # .env support
 python-dotenv==0.14.0
