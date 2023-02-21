@@ -24,7 +24,8 @@ services:
       target: production
       context: .
       dockerfile: Dockerfile
-  
+
+
   test:
     image: starnavi/starnavi:latest-test
     working_dir: /home/starnavi

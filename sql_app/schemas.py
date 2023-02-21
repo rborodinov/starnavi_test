@@ -1,6 +1,17 @@
-import datetime
+from datetime import datetime
 
 from pydantic import BaseModel
+from pydantic.networks import EmailStr
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(Token):
+    email: str | None = None
+
 
 
 class PostBase(BaseModel):
@@ -27,8 +38,10 @@ class Like(BaseModel):
 
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
 
+    class Config:
+        orm_mode = True
 
 class UserCreate(UserBase):
     password: str

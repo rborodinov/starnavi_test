@@ -3,15 +3,14 @@ import datetime
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import EmailType
+from sql_app.database import Base
 
-from .database import Base
 
 
 class User(Base):
     """
     User Model
     """
-
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
@@ -19,7 +18,7 @@ class User(Base):
     password = Column(Text)
 
     posts = relationship("Post", back_populates="owner")
-
+    likes = relationship("Like", back_populates="owner")
     last_visit = Column(DateTime)
     last_request = Column(DateTime)
 
@@ -36,8 +35,8 @@ class Post(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="posts")
+    likes = relationship("Like", back_populates="post")
     created = Column(DateTime, default=datetime.datetime.now)
-
 
 
 class Like(Base):
