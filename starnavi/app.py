@@ -33,5 +33,5 @@ async def root():
     return HTMLResponse(content=html_content, status_code=200)
 
 
-app.include_router(user_router)
-app.include_router(post_router)
+app.include_router(user_router, prefix="/api")
+app.include_router(post_router, prefix="/api")

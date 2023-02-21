@@ -9,6 +9,19 @@ class Token(BaseModel):
     token_type: str
 
 
+class LikeCreate(BaseModel):
+    owner_id: int
+    post_id: int
+
+
+class Like(LikeCreate):
+    id: int
+    created: datetime
+
+    class Config:
+        orm_mode = True
+
+
 class PostCreate(BaseModel):
     title: str
     description: str | None = None
@@ -26,10 +39,20 @@ class Post(PostUpdate):
         orm_mode = True
 
 
-class Like(BaseModel):
-    owner_id: int
-    post_id: int
-    created: datetime
+class OnePostWithLikes(PostUpdate):
+    likes: list[Like] = []
+    # likes_count: int
+
+    class Config:
+        orm_mode = True
+
+
+class PostsWithLikes(PostUpdate):
+    likes_count: int
+
+    class Config:
+        orm_mode = True
+
 
 
 class UserBase(BaseModel):
