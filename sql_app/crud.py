@@ -1,13 +1,7 @@
 from datetime import datetime
-
 from sqlalchemy.orm import Session
-
 from . import models, schemas
 from .security import get_password_hash
-
-from fastapi import Depends
-from contextlib import contextmanager
-
 
 
 def get_user(db: Session, user_id: int):
@@ -59,6 +53,24 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
+
+def modify_user(db: Session, user:models.User, data: schemas.UserCreate):
+    data.password = get_password_hash(data.password)
+    for key, value in data.__dict__.items():
+        setattr(user, key, value)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def change_password(db: Session, user:models.User, password: str):
+    password = get_password_hash(password)
+    user.password = password
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
 # def get_posts(db: Session, skip: int = 0, limit: int = 100):
 #

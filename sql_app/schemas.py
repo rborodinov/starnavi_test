@@ -9,11 +9,6 @@ class Token(BaseModel):
     token_type: str
 
 
-class TokenData(Token):
-    email: str | None = None
-
-
-
 class PostBase(BaseModel):
     title: str
     description: str | None = None
@@ -43,15 +38,23 @@ class UserBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
-    id: int
-    posts: list[Post] = []
+class UserModify(UserCreate):
     last_visit: datetime
     last_request: datetime
 
     class Config:
         orm_mode = True
+
+
+class User(UserModify):
+    id: int
+    posts: list[Post] = []
+
+    class Config:
+        orm_mode = True
+

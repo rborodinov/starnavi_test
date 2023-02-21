@@ -3,7 +3,7 @@ from urllib.request import Request
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from starnavi.utils.settings import Settings
-from sql_app import main as sql_app
+from sql_app import routes as sql_app
 from sql_app.middleware import   LastRequestMiddleware
 app = FastAPI()
 settings = Settings()
@@ -14,9 +14,10 @@ app.add_middleware(LastRequestMiddleware)
 
 @app.get("/")
 async def root():
+    """Base route, id is some useful links right here"""
     html_content = """
-    <html>
         <head>
+    <html>
             <title>Test Project</title>
         </head>
         <body>
