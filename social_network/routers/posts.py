@@ -100,8 +100,14 @@ def remove_one_like(post_id:int, like_id:int, db: Session = Depends(get_db),
     return count
 
 
-# /api/analitics/?date_from=2020-02-02&date_to=2020-02-15
 @router.get("/analitics/")
 def analitycs(date_from: date, date_to: date, db: Session = Depends(get_db)):
+    """analitics. How many likes was lifted. Example
+    /api/analitics/?date_from=2020-02-02&date_to=2020-02-15
+
+    :param date_from: date 2023-02-02
+    :param date_to: date 2020-02-15
+    :return: int sum of counts during this period
+    """
     count = crud.count_likes(db, date_from, date_to)
     return count[0]
