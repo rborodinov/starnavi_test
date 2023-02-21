@@ -3,7 +3,7 @@ import datetime
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import EmailType
-from sql_app.database import Base
+from social_network.database import Base
 
 
 
@@ -36,6 +36,7 @@ class Post(Base):
 
     owner = relationship("User", back_populates="posts")
     likes = relationship("Like", back_populates="post")
+
     created = Column(DateTime, default=datetime.datetime.now)
 
 
@@ -44,7 +45,7 @@ class Like(Base):
     Model to store likes
 
     It might be with composite primary key of users_id and posts_id
-    but task requirements are different.
+    but task requirements are different (multiple likes per user).
 
     """
     __tablename__ = "likes"

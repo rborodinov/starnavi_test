@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from sql_app import crud
+from social_network import crud
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -64,3 +64,14 @@ def get_current_user_email(token: str):
     except JWTError:
         raise credentials_exception
     return email
+
+
+def get_current_user_id(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("id")
+        if user_id is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    return user_id

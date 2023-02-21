@@ -1,14 +1,16 @@
-from urllib.request import Request
-
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from starnavi.utils.settings import Settings
-from sql_app import routes as sql_app
-from sql_app.middleware import   LastRequestMiddleware
+from social_network.routers import user_router, post_router
+from social_network.middleware import   LastRequestMiddleware
+from social_network import models
+from social_network.database import engine
+
+
 app = FastAPI()
 settings = Settings()
 
-
+models.Base.metadata.create_all(bind=engine)
 
 app.add_middleware(LastRequestMiddleware)
 
@@ -31,4 +33,5 @@ async def root():
     return HTMLResponse(content=html_content, status_code=200)
 
 
-app.include_router(sql_app.router)
+app.include_router(user_router)
+app.include_router(post_router)

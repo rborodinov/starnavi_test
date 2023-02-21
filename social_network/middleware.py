@@ -1,5 +1,5 @@
-from sql_app.crud import update_user_last_request, get_user_by_email
-from sql_app.security import get_current_user_email
+from social_network.crud import update_user_last_request, get_user_by_email
+from social_network.security import get_current_user_email
 from sqlalchemy.orm import Session
 
 from fastapi import Request
@@ -20,7 +20,7 @@ class LastRequestMiddleware(BaseHTTPMiddleware):
         if scheme == "Bearer":
             try:
                 email = get_current_user_email(token=param)
-                from sql_app.database import engine
+                from social_network.database import engine
                 with Session(engine) as db:
                     user = get_user_by_email(db, email)
                     update_user_last_request(db, user)

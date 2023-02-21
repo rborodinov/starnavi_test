@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from starnavi.utils.settings import Settings
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./social_network.db"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(

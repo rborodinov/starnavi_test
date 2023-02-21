@@ -1,13 +1,12 @@
 from fastapi import APIRouter
 from datetime import timedelta
-from sql_app import crud, models, schemas, security
-from sql_app.database import engine, get_db
-from sql_app.security import oauth2, ACCESS_TOKEN_EXPIRE_MINUTES
+from social_network import crud, models, schemas, security
+from social_network.database import engine, get_db
+from social_network.security import oauth2, ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 
@@ -85,15 +84,3 @@ def change_password(password: str, db: Session = Depends(get_db),
     user = crud.change_password(db, user, password)
     return user
 
-#
-# @router.post("/users/{user_id}/posts/", response_model=schemas.Post)
-# def create_item_for_user(
-#         user_id: int, item: schemas.PostCreate
-#         , db: Session = Depends(get_db)):
-#     return crud.create_user_post(item=item, user_id=user_id)
-#
-#
-# @router.get("/posts/", response_model=list[schemas.Post])
-# def read_items(skip: int = 0, limit: int = 100):
-#     items = crud.get_posts(skip=skip, limit=limit)
-#     return items

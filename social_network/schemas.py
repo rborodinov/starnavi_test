@@ -9,16 +9,16 @@ class Token(BaseModel):
     token_type: str
 
 
-class PostBase(BaseModel):
+class PostCreate(BaseModel):
     title: str
     description: str | None = None
 
 
-class PostCreate(PostBase):
-    pass
+class PostUpdate(PostCreate):
+    created: datetime
 
 
-class Post(PostBase):
+class Post(PostUpdate):
     id: int
     owner_id: int
 
