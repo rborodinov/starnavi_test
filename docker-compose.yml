@@ -1,4 +1,4 @@
-version: "3.8"
+version: "1"
 
 services: 
   dev:
@@ -16,28 +16,3 @@ services:
     
     environment: 
       - MODE=development
-  
-  prod:
-    image: starnavi/starnavi:latest-prod
-    working_dir: /production/starnavi
-    build: 
-      target: production
-      context: .
-      dockerfile: Dockerfile
-
-
-  test:
-    image: starnavi/starnavi:latest-test
-    working_dir: /home/starnavi
-    entrypoint: pytest
-    build: 
-      target: testing
-      context: .
-      dockerfile: Dockerfile
-    ports: 
-      - 8000:8000
-    volumes:
-      - .:/home/starnavi
-    
-    environment: 
-      - MODE=testing

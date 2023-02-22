@@ -11,4 +11,12 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin>
 sudo docker run hello-world
 ```
 
-There is Makefile so you can check commands there 
+To start project you can use make commands
+```
+make build
+make up
+```
+Project might start and you can visit http://127.0.0.1:8000/ to check it.
+
+
+Automated bot 
