@@ -1,25 +1,13 @@
-.PHONY: build dev test tests up-dev bash prod up-dev up-prod
+.PHONY: build dev up-dev bash up-dev
 
 
-build: dev prod test
+build: dev
 
 dev:
 	docker compose build dev
 
-prod:
-	docker compose build prod
-
-test:
-	docker compose build test
-
-tests:
-	docker compose run test
-
-up-dev:
+up:
 	docker compose up dev
-
-up-prod:
-	docker run -p 80:80 starnavi/starnavi:latest-prod
 
 bash:
 	docker compose run --entrypoint=bash dev
