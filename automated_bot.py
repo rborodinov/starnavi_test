@@ -1,12 +1,10 @@
 
 import grequests
-import argparse
+import requests
 import loremipsum
-import random
-import string
 from urllib.parse import urljoin
 from typing import Generator
-import json
+import random, string, argparse, json
 
 PASSWORD = "string"
 CONFIG_FILE_NAME = 'bot_config.json'
@@ -58,11 +56,12 @@ class Bot:
             yield (urljoin(base=self.domain, url=path), data)
 
     def create_likes_urls_pull(self, post_id_list):
-        post_id = random.choice(post_id_list)
-        path =f"/api/posts/{post_id}/likes"
         for _ in range(random.randint(1, self.max_likes_per_user)):
+            post_id = random.choice(post_id_list)
+            path = f"/api/posts/{post_id}/likes"
             data = {}
             yield (urljoin(base=self.domain, url=path), data)
+
 
     def __call__(self):
         """ Main method controls evaluation process"""
@@ -72,25 +71,28 @@ class Bot:
         # Generator that gaing access_tokens for new registered users
         result_accesing_tokens: Generator = (grequests.post(url, data=data)
                                              for url, data in self.get_access_tokens_urls(result_user_signup))
-
+        user_authorization_headers = []
         for token_response in grequests.imap(result_accesing_tokens):
             if token_response.status_code == 200:
                 # Working with single user through access_token
                 token_data: dict = token_response.json()
                 headers: dict = {"Authorization": f"{token_data['token_type']} {token_data['access_token']}"}
+                user_authorization_headers.append(headers)
 
                 # Generator creating posts
                 result_creating_posts: Generator = (grequests.post(url, json=data, headers=headers)
                                                     for url, data in self.create_post_urls_pull())
-                # ids of created posts extracted from response
-                post_id_list: list = [response.json()['id']
-                                        for response in grequests.imap(result_creating_posts)
-                                        if response.status_code == 200]
-                # Generator adding likes to random post
-                result_likes: Generator = (grequests.post(url, json=data, headers=headers)
-                                for url, data in self.create_likes_urls_pull(post_id_list))
-                # evaluate likes generator
-                grequests.map(result_likes)
+                grequests.map(result_creating_posts)
+
+        # ids of all posts already published
+        response = requests.get(urljoin(base=self.domain, url="/api/feed/"))
+        post_id_list = [post['id'] for post in response.json()]
+        for headers in user_authorization_headers:
+            # Generator adding likes to random post
+            result_likes: Generator = (grequests.post(url, json=data, headers=headers)
+                            for url, data in self.create_likes_urls_pull(post_id_list))
+            # evaluate likes generator
+            grequests.map(result_likes)
 
 
 def parse_command_line_config():

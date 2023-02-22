@@ -20,7 +20,20 @@ def read_user_posts(db: Session = Depends(get_db), token=Depends(oauth2)):
         result.append(p)
     return result
 
-#
+
+@router.get("/users/{user_id}/posts/", response_model=list[schemas.PostsWithLikes])
+def read_user_posts(user_id: int, db: Session = Depends(get_db), token=Depends(oauth2)):
+    """All posts published bu user as if you want to see all posts by other user
+    only for registered users"""
+    user_id = user_id
+    posts = crud.get_posts(db, user_id)
+    result = []
+    for post in posts:
+        p = schemas.PostsWithLikes(likes_count=post[1], **post[0].__dict__)
+        result.append(p)
+    return result
+
+
 @router.post("/posts/", response_model=schemas.Post)
 def create_user_post(post: schemas.PostCreate, db: Session = Depends(get_db),
                token=Depends(oauth2)):
