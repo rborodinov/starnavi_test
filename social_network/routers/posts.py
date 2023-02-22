@@ -20,7 +20,20 @@ def read_user_posts(db: Session = Depends(get_db), token=Depends(oauth2)):
         result.append(p)
     return result
 
-#
+
+@router.get("/users/{user_id}/posts/", response_model=list[schemas.PostsWithLikes])
+def read_user_posts(user_id: int, db: Session = Depends(get_db), token=Depends(oauth2)):
+    """All posts published bu user as if you want to see all posts by other user
+    only for registered users"""
+    user_id = user_id
+    posts = crud.get_posts(db, user_id)
+    result = []
+    for post in posts:
+        p = schemas.PostsWithLikes(likes_count=post[1], **post[0].__dict__)
+        result.append(p)
+    return result
+
+
 @router.post("/posts/", response_model=schemas.Post)
 def create_user_post(post: schemas.PostCreate, db: Session = Depends(get_db),
                token=Depends(oauth2)):
@@ -100,8 +113,25 @@ def remove_one_like(post_id:int, like_id:int, db: Session = Depends(get_db),
     return count
 
 
-# /api/analitics/?date_from=2020-02-02&date_to=2020-02-15
 @router.get("/analitics/")
 def analitycs(date_from: date, date_to: date, db: Session = Depends(get_db)):
+    """analitics. How many likes was lifted. Example
+    /api/analitics/?date_from=2020-02-02&date_to=2020-02-15
+
+    :param date_from: date 2023-02-02
+    :param date_to: date 2020-02-15
+    :return: int sum of counts during this period
+    """
     count = crud.count_likes(db, date_from, date_to)
     return count[0]
+
+
+@router.get("/feed/", response_model=list[schemas.PostsWithLikes])
+def all_posts(db: Session = Depends(get_db)):
+    """As this is social network we want to show all posts by all users """
+    posts = crud.get_all_posts(db)
+    result = []
+    for post in posts:
+        p = schemas.PostsWithLikes(likes_count=post[1], **post[0].__dict__)
+        result.append(p)
+    return result

@@ -39,7 +39,7 @@ class Post(PostUpdate):
         orm_mode = True
 
 
-class OnePostWithLikes(PostUpdate):
+class OnePostWithLikes(Post):
     likes: list[Like] = []
     # likes_count: int
 
@@ -47,7 +47,7 @@ class OnePostWithLikes(PostUpdate):
         orm_mode = True
 
 
-class PostsWithLikes(PostUpdate):
+class PostsWithLikes(Post):
     likes_count: int
 
     class Config:
