@@ -1,5 +1,8 @@
+## Instructions
+
 Hope you have a docker installed, otherwise https://docs.docker.com/engine/install/ubuntu/
-```
+
+```commandline
 sudo apt-get update
 sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
 sudo mkdir -m 0755 -p /etc/apt/keyrings
@@ -18,5 +21,19 @@ make up
 ```
 Project might start and you can visit http://127.0.0.1:8000/ to check it.
 
+Cascade delete don't work, I think this is because SQLite has supported foreign key constraint since version 3.6.19. /api/users/ DELETE cleans users, posts, likes mandatory.
 
-Automated bot 
+## Automated bot 
+
+Requirements file `bot_requirements.txt` maybe you'll want to use virtualenv.
+```commandline
+pip3 install bot_requirements.txt 
+```
+
+Bot file ` python3 automated_bot.py` 
+
+Config file `bot_config.json`
+Also you can start bot with args 
+```commandline
+python3 automated_bot.py --number_of_users 10  --max_posts_per_user 10 --max_likes_per_user 20
+```
