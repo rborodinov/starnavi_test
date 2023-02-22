@@ -6,7 +6,6 @@ from sqlalchemy_utils import EmailType
 from social_network.database import Base
 
 
-
 class User(Base):
     """
     User Model
@@ -17,8 +16,8 @@ class User(Base):
     email = Column(EmailType, unique=True)
     password = Column(Text)
 
-    posts = relationship("Post", back_populates="owner")
-    likes = relationship("Like", back_populates="owner")
+    posts = relationship("Post", back_populates="owner", cascade='save-update, merge, delete', passive_deletes=True)
+    likes = relationship("Like", back_populates="owner", cascade='save-update, merge, delete', passive_deletes=True)
     last_visit = Column(DateTime)
     last_request = Column(DateTime)
 
@@ -32,10 +31,10 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'))
 
     owner = relationship("User", back_populates="posts")
-    likes = relationship("Like", back_populates="post")
+    likes = relationship("Like", back_populates="post", cascade='save-update, merge, delete', passive_deletes=True)
 
     created = Column(DateTime, default=datetime.datetime.now)
 
@@ -52,10 +51,10 @@ class Like(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="likes")
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'))
+    owner = relationship("User", back_populates="likes", )
 
-    post_id = Column(Integer, ForeignKey("posts.id"))
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete='CASCADE'))
     post = relationship("Post", back_populates="likes")
 
     created = Column(DateTime, default=datetime.datetime.now)

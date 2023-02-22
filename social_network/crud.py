@@ -20,6 +20,8 @@ def get_users(db: Session):
 
 def delete_all_users(db: Session):
     count = db.query(User).delete()
+    _ = db.query(Post).delete()
+    _ = db.query(Like).delete()
     db.commit()
     return count
 
