@@ -111,3 +111,14 @@ def analitycs(date_from: date, date_to: date, db: Session = Depends(get_db)):
     """
     count = crud.count_likes(db, date_from, date_to)
     return count[0]
+
+
+@router.get("/feed/", response_model=list[schemas.PostsWithLikes])
+def all_posts(db: Session = Depends(get_db)):
+    """As this is social network we want to show all posts by all users """
+    posts = crud.get_all_posts(db)
+    result = []
+    for post in posts:
+        p = schemas.PostsWithLikes(likes_count=post[1], **post[0].__dict__)
+        result.append(p)
+    return result

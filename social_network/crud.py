@@ -73,9 +73,16 @@ def change_password(db: Session, user: User, password: str):
 def get_posts(db: Session, user_id: int):
     return (  # db.query(Post)
         db.query(Post, func.count(Like.id).label("likes"))
-        .join(Like)
+        .outerjoin(Like)
         .filter(Post.owner_id == user_id)
+        .group_by(Post.id)
         .all())
+
+
+def get_all_posts(db: Session):
+    return (  # db.query(Post)
+        db.query(Post, func.count(Like.id).label("likes"))
+        .outerjoin(Like).group_by(Post.id).all())
 
 
 def create_user_post(db: Session, post: schemas.PostCreate, user_id: int):

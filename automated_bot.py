@@ -6,6 +6,7 @@ import random
 import string
 from urllib.parse import urljoin
 from typing import Generator
+import json
 
 PASSWORD = "string"
 CONFIG_FILE_NAME = 'bot_config.json'
@@ -20,7 +21,8 @@ def random_email():
 
 class Bot:
     def __init__(self, number_of_users:int, max_posts_per_user:int,
-                 max_likes_per_user:int, domain:str):
+                 max_likes_per_user:int, domain:str, **kwargs):
+
         self.number_of_users = number_of_users
         self.max_posts_per_user = max_posts_per_user
         self.max_likes_per_user = max_likes_per_user
@@ -99,8 +101,15 @@ def parse_command_line_config():
     args = parser.parse_args()
     data = {}
     for key, value in args.__dict__.items():
-        data[key] = int(value)
+        if value:
+            data[key] = int(value)
     return data
+
+
+def parse_config_file():
+    # Opening JSON file
+    with open('bot_config.json') as f:
+        return json.load(f)
 
 
 if __name__ == '__main__':
@@ -109,10 +118,8 @@ if __name__ == '__main__':
 
     domain = "http://127.0.0.1:8000/"
     data = {"domain": domain}
-
+    data.update(**parse_config_file())
     data.update(**parse_command_line_config())
-
-
 
     bot = Bot(**data)
     bot()
