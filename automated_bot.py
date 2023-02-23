@@ -100,11 +100,16 @@ def parse_command_line_config():
     parser.add_argument('--number_of_users')
     parser.add_argument('--max_posts_per_user')
     parser.add_argument('--max_likes_per_user')
+    parser.add_argument('--domain')
     args = parser.parse_args()
+    args = args.__dict__
+    domain = args.pop('domain', None)
     data = {}
-    for key, value in args.__dict__.items():
+    for key, value in args.items():
         if value:
             data[key] = int(value)
+    if domain:
+        data['domain'] = domain
     return data
 
 
@@ -115,13 +120,12 @@ def parse_config_file():
 
 
 if __name__ == '__main__':
-    print("Example of usage >> python3 automated_bot.py --number_of_users 10  "
-          "--max_posts_per_user 10 --max_likes_per_user 20")
 
     domain = "http://127.0.0.1:8000/"
     data = {"domain": domain}
     data.update(**parse_config_file())
     data.update(**parse_command_line_config())
+    print(f"Bot started. using {data['domain']}")
 
     bot = Bot(**data)
     bot()

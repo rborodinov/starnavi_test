@@ -5,7 +5,7 @@ services:
     image: starnavi/starnavi:latest-dev
     working_dir: /home/starnavi
     entrypoint: uvicorn starnavi.app:app --reload --host 0.0.0.0
-    build: 
+    build:
       target: development
       context: .
       dockerfile: Dockerfile
@@ -13,6 +13,21 @@ services:
       - 8000:8000
     volumes:
       - .:/home/starnavi
-    
     environment: 
       - MODE=development
+
+  bot:
+    image: starnavi/starnavi_bot:latest-dev
+    working_dir: /home/starnavi
+    entrypoint: python3 automated_bot.py --domain http://dev:8000
+    build:
+      target: bot
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/starnavi
+
+networks:
+  default:
+    external:
+      name: starnavi_default

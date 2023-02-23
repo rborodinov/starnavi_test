@@ -25,6 +25,14 @@ Cascade delete don't work, I think this is because SQLite has supported foreign 
 
 ## Automated bot 
 
+To run bot using docker you can use make commands
+```
+make bot
+make up_bot
+```
+
+Otherwise
+
 Requirements file `bot_requirements.txt` maybe you'll want to use virtualenv.
 ```commandline
 pip3 install bot_requirements.txt 
